@@ -30,6 +30,7 @@ app.use(passport.session());
 
 /////////// PASSPORT STRATEGY \\\\\\\\\\\
 passport.use(
+  'login',
   new LocalStrategy({ usernameField: 'employee_id' }, function(
     employee_id,
     password,
@@ -39,8 +40,26 @@ passport.use(
       return user.employee_id === employee_id && user.password === password;
     });
 
-    if (matchedUser) return done(null, true);
-    return done(null, false, { message: 'Incorrect username or password' });
+    return matchedUser
+      ? done(null, true)
+      : done(null, false, { message: 'Incorrect username or password.' });
+  })
+);
+
+passport.use(
+  'register',
+  new LocalStrategy({ usernameField: 'employee_id' }, function(
+    employee_id,
+    password,
+    done
+  ) {
+    const matchedUser = users.find(function(user) {
+      return user.employee_id === employee_id;
+    });
+
+    return !matchedUser
+      ? done(null, false, { message: 'Employee ID is already taken.' })
+      : done(null, true);
   })
 );
 
@@ -55,19 +74,39 @@ passport.deserializeUser(function(user, done) {
 /////////// PASSPORT ENDPOINT \\\\\\\\\\\
 app.post(
   '/api/login',
-  passport.authenticate('local', {
+  passport.authenticate('login', {
     successRedirect: '/',
     failureRedirect: '/login'
   })
 );
 
-// app.post('/login', function(req, res, next) {
-//   passport.authenticate('local', function(err, user) {
-//     if (err) return next(err);
-//     if (!user) return res.redirect('/login');
-//     return res.redirect('/');
-//   })(req, res, next);
-// });
+app.post('/api/register', function(req, res, next) {
+  const { employee_id, password, role } = req.body;
+
+  passport.authenticate('register', function(err, user) {
+    if (err) {
+      console.error(err);
+      return next(err);
+    }
+
+    if (!user) {
+      const newUser = new Object({
+        id: users.length + 1,
+        employee_id: employee_id,
+        password: password,
+        role: role
+      });
+
+      users.push(newUser);
+
+      console.log(users);
+      return res.redirect('/');
+    }
+
+    console.log(users);
+    return res.redirect('/register');
+  })(req, res, next);
+});
 
 /////////// ROUTES \\\\\\\\\\\
 app.get('/', function(req, res) {
