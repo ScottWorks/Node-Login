@@ -14,43 +14,44 @@ const express = require('express'),
 const app = express(),
   { PORT } = process.env;
 
-app.use(bodyParser.json());
+app.use(bodyParser());
 app.use(passport.initialize());
+app.use(passport.session());
 
 /////////// PASSPORT STRATEGY \\\\\\\\\\\
 passport.use(
   new LocalStrategy(function(username, password, done) {
-    console.log(username);
-
     const matchedUser = users.find(function(user) {
       return user.username === username && user.password === password;
     });
 
-    if (matchedUser) return done(null, matchedUser);
+    if (matchedUser) return done(null, true);
     return done(null, false, { message: 'Incorrect username or password' });
   })
 );
 
-/////////// PASSPORT ENDPOINT \\\\\\\\\\\
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+/////////// PASSPORT ROUTES \\\\\\\\\\\
 app.post(
-  '/api/login',
+  '/login',
   passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login'
   })
 );
-// app.post('/api/login', function(req, res, next) {
+
+// app.post('/login', function(req, res, next) {
 //   passport.authenticate('local', function(err, user) {
-//     console.log(user);
-
 //     if (err) return next(err);
-
-//     if (!user) return res.sendStatus(404);
-
-//     req.logIn(user, function(err) {
-//       if (err) return next(err);
-//       else return res.sendStatus(200);
-//     });
+//     if (!user) return res.redirect('/login');
+//     return res.redirect('/');
 //   })(req, res, next);
 // });
 
