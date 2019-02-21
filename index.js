@@ -1,11 +1,21 @@
 const users = [
-  { id: 1, username: 'courtman', password: '123456' },
-  { id: 2, username: 'terder', password: 'tulips' },
-  { id: 3, username: 'danielle', password: 'garfield' }
+  { id: 1, employee_id: '1111', password: '123', role: 'owner' },
+  { id: 2, employee_id: '1112', password: 'tulips', role: 'manager' },
+  {
+    id: 3,
+    employee_id: '1113',
+    password: 'garfield',
+    role: 'transmission mechanic'
+  },
+  {
+    id: 4,
+    employee_id: '1114',
+    password: 'toystory',
+    role: 'auto-body technician'
+  }
 ];
 
 require('dotenv').config();
-
 const express = require('express'),
   bodyParser = require('body-parser'),
   passport = require('passport'),
@@ -20,9 +30,13 @@ app.use(passport.session());
 
 /////////// PASSPORT STRATEGY \\\\\\\\\\\
 passport.use(
-  new LocalStrategy(function(username, password, done) {
+  new LocalStrategy({ usernameField: 'employee_id' }, function(
+    employee_id,
+    password,
+    done
+  ) {
     const matchedUser = users.find(function(user) {
-      return user.username === username && user.password === password;
+      return user.employee_id === employee_id && user.password === password;
     });
 
     if (matchedUser) return done(null, true);
@@ -62,6 +76,10 @@ app.get('/', function(req, res) {
 
 app.get('/login', function(req, res) {
   res.render('./login.ejs');
+});
+
+app.get('/register', function(req, res) {
+  res.render('./register.ejs');
 });
 
 /////////// ENDPOINTS \\\\\\\\\\\
