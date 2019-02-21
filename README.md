@@ -9,8 +9,8 @@ Completed:
 
 Incomplete:
 
-- [] Protected Routes/ Endpoints
-- [] Authorization Code Grant
-- [] JSON Web Tokens
-- [] Session Persistance
-- [] Endpoint Testing
+- [ ] Protected Routes/ Endpoints
+- [ ] Authorization Code Grant
+- [ ] JSON Web Tokens
+- [ ] Session Persistance
+- [ ] Endpoint Testing
