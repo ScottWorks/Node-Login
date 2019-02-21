@@ -38,9 +38,9 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-/////////// PASSPORT ROUTES \\\\\\\\\\\
+/////////// PASSPORT ENDPOINT \\\\\\\\\\\
 app.post(
-  '/login',
+  '/api/login',
   passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login'
@@ -67,10 +67,6 @@ app.get('/login', function(req, res) {
 /////////// ENDPOINTS \\\\\\\\\\\
 app.get('/api/user', function(req, res) {
   res.status(200).send('User is Courtman!');
-});
-
-app.post('/api/user', function(req, res) {
-  res.sendStatus(202);
 });
 
 app.listen(PORT, function() {
