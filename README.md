@@ -6,11 +6,11 @@ Completed:
 
 - [x] Local Authentication (Password Grant)
 - [x] User Registration
+- [x] Protected Routes/ Endpoints
+- [x] Session Persistance
 
 Incomplete:
 
-- [ ] Protected Routes/ Endpoints
 - [ ] Authorization Code Grant
 - [ ] JSON Web Tokens
-- [ ] Session Persistance
 - [ ] Endpoint Testing
