@@ -1,6 +1,6 @@
 ## Motivation
 
-This is a Sandbox for exploring different concepts in Node.js, listed are the concepts that have been explored.
+This is a sandbox for practicing concepts related to authentication with Node.js, listed are the concepts that have been explored.
 
 Completed:
 
