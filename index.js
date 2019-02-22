@@ -1,23 +1,8 @@
-const users = [
-  { id: 1, employee_id: '1111', password: '123', role: 'owner' },
-  { id: 2, employee_id: '1112', password: 'tulips', role: 'manager' },
-  {
-    id: 3,
-    employee_id: '1113',
-    password: 'garfield',
-    role: 'transmission mechanic'
-  },
-  {
-    id: 4,
-    employee_id: '1114',
-    password: 'toystory',
-    role: 'auto-body technician'
-  }
-];
-
 require('dotenv').config();
 const express = require('express'),
   bodyParser = require('body-parser'),
+  helmet = require('helmet'),
+  users = require('./mockDB'),
   passport = require('passport'),
   LocalStrategy = require('passport-local').Strategy;
 
@@ -25,10 +10,12 @@ const app = express(),
   { PORT } = process.env;
 
 app.use(bodyParser());
+app.use(helmet());
 app.use(passport.initialize());
 app.use(passport.session());
 
 /////////// PASSPORT STRATEGY \\\\\\\\\\\
+// require('./config/passport')(passport);
 passport.use(
   'login',
   new LocalStrategy({ usernameField: 'employee_id' }, function(
@@ -83,29 +70,30 @@ app.post(
 app.post('/api/register', function(req, res, next) {
   const { employee_id, password, role } = req.body;
 
-  passport.authenticate('register', function(err, user) {
-    if (err) {
-      console.error(err);
-      return next(err);
-    }
+  if (employee_id && employee_id.length > 0) {
+    passport.authenticate('register', function(err, user) {
+      if (err) {
+        console.error(err);
+        return next(err);
+      }
 
-    if (!user) {
-      const newUser = new Object({
-        id: users.length + 1,
-        employee_id: employee_id,
-        password: password,
-        role: role
-      });
+      if (!user) {
+        const newUser = new Object({
+          id: users.length + 1,
+          employee_id: employee_id,
+          password: password,
+          role: role
+        });
 
-      users.push(newUser);
+        users.push(newUser);
+        return res.redirect('/');
+      }
 
-      console.log(users);
-      return res.redirect('/');
-    }
-
-    console.log(users);
-    return res.redirect('/register');
-  })(req, res, next);
+      return res.redirect('/register');
+    })(req, res, next);
+  } else {
+    res.status(400).redirect('/register');
+  }
 });
 
 /////////// ROUTES \\\\\\\\\\\
