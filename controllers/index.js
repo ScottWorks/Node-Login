@@ -15,10 +15,11 @@ module.exports = {
             console.error(err);
             return next(err);
           }
-          return res.redirect(`/api/${employee.employee_id}`);
+          res.redirect(`/api/${employee.employee_id}`);
         });
       } else {
-        return res.status(400).redirect('/login');
+        res.status(401);
+        res.render('./login.ejs');
       }
     })(req, res, next);
   },
@@ -32,6 +33,7 @@ module.exports = {
       }
 
       if (!employee) {
+        console.log('hit');
         const newEmployee = new Object({
           id: employees.length + 1,
           employee_id: employee_id,
@@ -46,10 +48,11 @@ module.exports = {
             console.error(err);
             return next(err);
           }
-          return res.redirect(`/api/${newEmployee.employee_id}`);
+          res.redirect(`/api/${newEmployee.employee_id}`);
         });
       } else {
-        return res.status(400).redirect('/register');
+        res.status(400);
+        res.render('./register.ejs');
       }
     })(req, res, next);
   },

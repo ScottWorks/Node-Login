@@ -7,7 +7,8 @@ module.exports = {
         return next();
       }
     } else {
-      return res.status(400).redirect('/register');
+      res.status(400);
+      res.render('./register.ejs');
     }
   }
 };

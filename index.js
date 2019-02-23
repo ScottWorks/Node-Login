@@ -20,13 +20,15 @@ app.use(
   })
 );
 
-app.use(bodyParser());
+app.use(bodyParser.json());
+app.use(bodyParser.text());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(helmet());
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-/////////// PASSPORT STRATEGY \\\\\\\\\\\
 require('./middleware/passport')(passport);
 
 /////////// API ENDPOINTS \\\\\\\\\\\

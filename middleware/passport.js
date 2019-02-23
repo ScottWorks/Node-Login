@@ -33,8 +33,8 @@ module.exports = function(passport) {
       });
 
       return !matchedEmployee
-        ? done(null, matchedEmployee)
-        : done(null, false, { message: 'Employee ID is already taken.' });
+        ? done(null, false)
+        : done(null, true, { message: 'Employee ID is already taken.' });
     })
   );
 

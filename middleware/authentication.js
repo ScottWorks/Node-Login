@@ -3,6 +3,7 @@ module.exports = {
     if (req.isAuthenticated()) {
       return next();
     }
-    return res.status(403).redirect('/login');
+    res.status(401);
+    res.render('./login.ejs');
   }
 };
